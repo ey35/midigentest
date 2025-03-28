@@ -143,4 +143,24 @@ searchBtn.addEventListener('click', () => {
 
 libraryBtn.addEventListener('click', () => {
     mainContent.innerHTML = `<h1>Your Library</h1>`;
+    // Render all songs from all playlists in the library view
+    const libraryContainer = document.createElement('div');
+    Object.keys(songs).forEach(playlist => {
+        const playlistSection = document.createElement('div');
+        playlistSection.innerHTML = `<h2>${playlist}</h2>`;
+        songs[playlist].forEach((song, index) => {
+            const songItem = document.createElement('div');
+            songItem.innerHTML = `
+                <img src="${song.albumArt}" alt="Album Art">
+                <div class="song-info">
+                    <div class="song-title">${song.title}</div>
+                    <div class="song-artist">${song.artist}</div>
+                </div>
+            `;
+            songItem.addEventListener('click', () => playSong(index));
+            playlistSection.appendChild(songItem);
+        });
+        libraryContainer.appendChild(playlistSection);
+    });
+    mainContent.appendChild(libraryContainer);
 });
