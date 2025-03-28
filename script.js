@@ -2,22 +2,32 @@
 document.addEventListener("DOMContentLoaded", () => {
     const fileInput = document.getElementById("fileInput");
     const playlist = document.getElementById("playlist");
-
+    const audioPlayer = document.getElementById("audioPlayer");
+    const trackName = document.getElementById("trackName");
+    
+    function showTab(tabId) {
+        document.querySelectorAll(".tab-content").forEach(tab => {
+            tab.style.display = "none";
+        });
+        document.getElementById(tabId).style.display = "block";
+    }
+    
     fileInput.addEventListener("change", (event) => {
         const files = event.target.files;
-        for (let file of files) {
-            const audioURL = URL.createObjectURL(file);
-            const trackDiv = document.createElement("div");
-            trackDiv.innerHTML = `
-                <button onclick="playTrack('${audioURL}')">Play</button>
-                ${file.name}
-            `;
-            playlist.appendChild(trackDiv);
+        if (files.length > 0) {
+            Array.from(files).forEach(file => {
+                const listItem = document.createElement("li");
+                listItem.textContent = file.name;
+                listItem.addEventListener("click", () => {
+                    const objectURL = URL.createObjectURL(file);
+                    audioPlayer.src = objectURL;
+                    trackName.textContent = file.name;
+                    audioPlayer.play();
+                });
+                playlist.appendChild(listItem);
+            });
         }
     });
-});
 
-function playTrack(url) {
-    const audio = new Audio(url);
-    audio.play();
-}
+    window.showTab = showTab;
+});
