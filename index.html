@@ -1,4 +1,3 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,43 +5,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spotify Clone</title>
     <link rel="stylesheet" href="styles.css">
-    <script defer src="script.js"></script>
-    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Spotify_icon.svg/1024px-Spotify_icon.svg.png" type="image/png">
 </head>
 <body>
-    <nav class="tabs">
-        <button onclick="showTab('library')">Library</button>
-        <button onclick="showTab('playlists')">Playlists</button>
-        <button onclick="showTab('upload')">Add MP3s</button>
-    </nav>
-    
-    <div id="library" class="tab-content">
-        <h2>Your Library</h2>
-        <ul id="playlist"></ul>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fab fa-spotify"></i> Spotify
+            </div>
+            <nav>
+                <div class="nav-item" id="home-btn">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </div>
+                <div class="nav-item" id="search-btn">
+                    <i class="fas fa-search"></i>
+                    <span>Search</span>
+                </div>
+                <div class="nav-item" id="library-btn">
+                    <i class="fas fa-book"></i>
+                    <span>Your Library</span>
+                </div>
+            </nav>
+            <div class="playlist">
+                <div class="playlist-item">Playlist 1</div>
+                <div class="playlist-item">Playlist 2</div>
+                <div class="playlist-item">Playlist 3</div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search for Artists, Songs, or Podcasts">
+                </div>
+                <div class="user-profile">
+                    <img src="https://i.pravatar.cc/100" alt="User Avatar">
+                    <span>Jonny Bravo</span>
+                </div>
+            </div>
+            <h2>Your Playlist</h2>
+            <ul class="songs-list" id="songs-list">
+                <!-- Songs will be dynamically added here -->
+            </ul>
+            <form id="add-song-form">
+                <input type="file" id="song-file" accept="audio/*" required>
+                <input type="text" id="song-title" placeholder="Song Title" required>
+                <input type="text" id="song-artist" placeholder="Artist" required>
+                <button type="submit">Add Song</button>
+            </form>
+        </div>
     </div>
-    
-    <div id="playlists" class="tab-content" style="display: none;">
-        <h2>Your Playlists</h2>
-        <ul id="userPlaylists"></ul>
-        <input type="text" id="newPlaylistName" placeholder="New Playlist Name">
-        <button onclick="createPlaylist()">Create Playlist</button>
+
+    <!-- Playback Bar -->
+    <div class="playback-bar">
+        <div class="playback-info">
+            <img src="https://via.placeholder.com/60" alt="Album Cover" id="current-song-image">
+            <div>
+                <div class="song-title" id="current-song-title">Song Title</div>
+                <div class="song-artist" id="current-song-artist">Artist</div>
+            </div>
+        </div>
+        <div class="playback-controls">
+            <div class="control-buttons">
+                <i class="fas fa-step-backward" id="prev-btn"></i>
+                <i class="fas fa-play-circle" id="play-pause-btn"></i>
+                <i class="fas fa-step-forward" id="next-btn"></i>
+            </div>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+        </div>
+        <div class="volume-control">
+            <i class="fas fa-volume-up"></i>
+            <input type="range" class="volume-slider" min="0" max="100" value="50">
+        </div>
     </div>
-    
-    <div id="upload" class="tab-content" style="display: none;">
-        <h2>Add MP3s</h2>
-        <input type="file" id="fileInput" multiple accept="audio/*">
-    </div>
-    
-    <div class="player">
-        <h1>Now Playing</h1>
-        <p id="trackName">Select a track</p>
-        <audio id="audioPlayer" controls></audio>
-    </div>
-    
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js');
-        }
-    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
