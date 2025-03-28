@@ -1,5 +1,9 @@
 let currentSongIndex = 0;
-let songs = [];
+let currentPlaylist = "Default";
+let songs = {
+    "Default": []
+};
+
 const audio = new Audio();
 const playPauseBtn = document.getElementById('play-pause-btn');
 const prevBtn = document.getElementById('prev-btn');
@@ -7,7 +11,8 @@ const nextBtn = document.getElementById('next-btn');
 const currentSongTitle = document.getElementById('current-song-title');
 const currentSongArtist = document.getElementById('current-song-artist');
 const currentSongImage = document.getElementById('current-song-image');
-const progressBar = document.getElementById('progress');
+const progressBar = document.getElementById('progress-bar-range');
+const playlistList = document.getElementById('playlist-list');
 
 const addSongForm = document.getElementById('add-song-form');
 const songFileInput = document.getElementById('song-file');
@@ -17,13 +22,14 @@ const songArtistInput = document.getElementById('song-artist');
 const homeBtn = document.getElementById('home-btn');
 const searchBtn = document.getElementById('search-btn');
 const libraryBtn = document.getElementById('library-btn');
+const createPlaylistBtn = document.getElementById('create-playlist-btn');
 const mainContent = document.getElementById('main-content');
-const playlistList = document.getElementById('playlist-list');
 
+// Render Songs for a playlist
 function renderSongs() {
     const songsContainer = document.getElementById('songs-container');
     songsContainer.innerHTML = '';
-    songs.forEach((song, index) => {
+    songs[currentPlaylist].forEach((song, index) => {
         const songItem = document.createElement('div');
         songItem.classList.add('song-item');
         songItem.innerHTML = `
@@ -38,9 +44,22 @@ function renderSongs() {
     });
 }
 
+// Add Song to the current playlist
+function addSong(file, title, artist) {
+    const song = {
+        title,
+        artist,
+        file: URL.createObjectURL(file),
+        albumArt: 'https://via.placeholder.com/60',
+    };
+    songs[currentPlaylist].push(song);
+    renderSongs();
+}
+
+// Handle Audio Playback
 function playSong(index) {
     currentSongIndex = index;
-    const song = songs[currentSongIndex];
+    const song = songs[currentPlaylist][currentSongIndex];
     audio.src = song.file;
     audio.play();
     currentSongTitle.textContent = song.title;
@@ -49,20 +68,10 @@ function playSong(index) {
     playPauseBtn.textContent = 'Pause';
 }
 
-function addSong(file, title, artist) {
-    const song = {
-        title,
-        artist,
-        file: URL.createObjectURL(file),
-        albumArt: 'https://via.placeholder.com/60',
-    };
-    songs.push(song);
-    renderSongs();
-}
-
+// Add Event Listeners
 audio.addEventListener('timeupdate', () => {
     const progress = (audio.currentTime / audio.duration) * 100;
-    progressBar.style.width = progress + '%';
+    progressBar.value = progress;
 });
 
 addSongForm.addEventListener('submit', (event) => {
@@ -74,6 +83,7 @@ addSongForm.addEventListener('submit', (event) => {
     addSongForm.reset();
 });
 
+// Play/Pause Button
 playPauseBtn.addEventListener('click', () => {
     if (audio.paused) {
         audio.play();
@@ -84,6 +94,7 @@ playPauseBtn.addEventListener('click', () => {
     }
 });
 
+// Previous and Next Buttons
 prevBtn.addEventListener('click', () => {
     if (currentSongIndex > 0) {
         playSong(currentSongIndex - 1);
@@ -91,8 +102,23 @@ prevBtn.addEventListener('click', () => {
 });
 
 nextBtn.addEventListener('click', () => {
-    if (currentSongIndex < songs.length - 1) {
+    if (currentSongIndex < songs[currentPlaylist].length - 1) {
         playSong(currentSongIndex + 1);
+    }
+});
+
+// Create Playlist Button
+createPlaylistBtn.addEventListener('click', () => {
+    const playlistName = prompt("Enter playlist name:");
+    if (playlistName && !songs[playlistName]) {
+        songs[playlistName] = [];
+        const playlistItem = document.createElement('li');
+        playlistItem.textContent = playlistName;
+        playlistItem.addEventListener('click', () => {
+            currentPlaylist = playlistName;
+            renderSongs();
+        });
+        playlistList.appendChild(playlistItem);
     }
 });
 
@@ -100,9 +126,7 @@ nextBtn.addEventListener('click', () => {
 homeBtn.addEventListener('click', () => {
     mainContent.innerHTML = `
         <h1>Your Playlist</h1>
-        <div class="songs-container" id="songs-container">
-            <!-- Songs will be dynamically added here -->
-        </div>
+        <div class="songs-container" id="songs-container"></div>
         <form id="add-song-form">
             <input type="file" id="song-file" accept="audio/*" required>
             <input type="text" id="song-title" placeholder="Song Title" required>
