@@ -7,13 +7,42 @@
     <title>Spotify Clone</title>
     <link rel="stylesheet" href="styles.css">
     <script defer src="script.js"></script>
+    <link rel="manifest" href="manifest.json">
 </head>
 <body>
-    <div class="container">
-        <h1>My Music Player</h1>
-        <input type="file" id="fileInput" multiple accept="audio/*">
-        <div id="playlist"></div>
+    <nav class="tabs">
+        <button onclick="showTab('library')">Library</button>
+        <button onclick="showTab('playlists')">Playlists</button>
+        <button onclick="showTab('upload')">Add MP3s</button>
+    </nav>
+    
+    <div id="library" class="tab-content">
+        <h2>Your Library</h2>
+        <ul id="playlist"></ul>
     </div>
+    
+    <div id="playlists" class="tab-content" style="display: none;">
+        <h2>Your Playlists</h2>
+        <ul id="userPlaylists"></ul>
+        <input type="text" id="newPlaylistName" placeholder="New Playlist Name">
+        <button onclick="createPlaylist()">Create Playlist</button>
+    </div>
+    
+    <div id="upload" class="tab-content" style="display: none;">
+        <h2>Add MP3s</h2>
+        <input type="file" id="fileInput" multiple accept="audio/*">
+    </div>
+    
+    <div class="player">
+        <h1>Now Playing</h1>
+        <p id="trackName">Select a track</p>
+        <audio id="audioPlayer" controls></audio>
+    </div>
+    
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js');
+        }
+    </script>
 </body>
 </html>
-
