@@ -13,6 +13,7 @@ const currentSongArtist = document.getElementById('current-song-artist');
 const currentSongImage = document.getElementById('current-song-image');
 const progressBar = document.getElementById('progress-bar-range');
 const playlistList = document.getElementById('playlist-list');
+const songsContainer = document.getElementById('songs-container');
 
 const addSongForm = document.getElementById('add-song-form');
 const songFileInput = document.getElementById('song-file');
@@ -27,8 +28,9 @@ const mainContent = document.getElementById('main-content');
 
 // Render Songs for a playlist
 function renderSongs() {
-    const songsContainer = document.getElementById('songs-container');
     songsContainer.innerHTML = '';
+    if (!songs[currentPlaylist]) return;
+
     songs[currentPlaylist].forEach((song, index) => {
         const songItem = document.createElement('div');
         songItem.classList.add('song-item');
@@ -52,6 +54,9 @@ function addSong(file, title, artist) {
         file: URL.createObjectURL(file),
         albumArt: 'https://via.placeholder.com/60',
     };
+    if (!songs[currentPlaylist]) {
+        songs[currentPlaylist] = [];
+    }
     songs[currentPlaylist].push(song);
     renderSongs();
 }
