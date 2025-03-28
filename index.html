@@ -21,6 +21,9 @@
                 <div class="nav-item" id="library-btn">
                     <span>Your Library</span>
                 </div>
+                <div class="nav-item" id="create-playlist-btn">
+                    <span>Create Playlist</span>
+                </div>
             </nav>
             <div class="playlist">
                 <h3>Playlists</h3>
@@ -44,7 +47,6 @@
                 <button type="submit">Add Song</button>
             </form>
         </div>
-
     </div>
 
     <!-- Playback Bar -->
@@ -64,7 +66,7 @@
                 <button id="next-btn">Next</button>
             </div>
             <div class="progress-bar">
-                <div class="progress" id="progress"></div>
+                <input type="range" id="progress-bar-range" value="0" step="0.1" min="0" max="100">
             </div>
         </div>
     </div>
