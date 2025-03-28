@@ -14,6 +14,12 @@ const songFileInput = document.getElementById('song-file');
 const songTitleInput = document.getElementById('song-title');
 const songArtistInput = document.getElementById('song-artist');
 
+const homeBtn = document.getElementById('home-btn');
+const searchBtn = document.getElementById('search-btn');
+const libraryBtn = document.getElementById('library-btn');
+const mainContent = document.getElementById('main-content');
+const playlistList = document.getElementById('playlist-list');
+
 function renderSongs() {
     const songsContainer = document.getElementById('songs-container');
     songsContainer.innerHTML = '';
@@ -88,4 +94,29 @@ nextBtn.addEventListener('click', () => {
     if (currentSongIndex < songs.length - 1) {
         playSong(currentSongIndex + 1);
     }
+});
+
+// Tab Navigation
+homeBtn.addEventListener('click', () => {
+    mainContent.innerHTML = `
+        <h1>Your Playlist</h1>
+        <div class="songs-container" id="songs-container">
+            <!-- Songs will be dynamically added here -->
+        </div>
+        <form id="add-song-form">
+            <input type="file" id="song-file" accept="audio/*" required>
+            <input type="text" id="song-title" placeholder="Song Title" required>
+            <input type="text" id="song-artist" placeholder="Artist" required>
+            <button type="submit">Add Song</button>
+        </form>
+    `;
+    renderSongs();
+});
+
+searchBtn.addEventListener('click', () => {
+    mainContent.innerHTML = `<h1>Search Songs</h1>`;
+});
+
+libraryBtn.addEventListener('click', () => {
+    mainContent.innerHTML = `<h1>Your Library</h1>`;
 });
