@@ -1,112 +1,60 @@
-class MusicPlayer {
-  private audio: HTMLAudioElement;
-  private playlist: { file: File; name: string; url: string }[];
-  private currentIndex: number;
-  private isPlaying: boolean;
+let audio = new Audio();
+let isPlaying = false;
 
-  private playlistElement: HTMLElement;
-  private fileInput: HTMLInputElement;
-  private seekBar: HTMLElement;
-  private seekBarFill: HTMLElement;
-  private currentTimeElement: HTMLElement;
-  private durationElement: HTMLElement;
-  private playPauseBtn: HTMLElement;
-  private prevBtn: HTMLElement;
-  private nextBtn: HTMLElement;
-  private trackName: HTMLElement;
+document.getElementById("file-input").addEventListener("change", function() {
+    let file = this.files[0];
+    let reader = new FileReader();
 
-  constructor() {
-    this.audio = new Audio();
-    this.playlist = [];
-    this.currentIndex = 0;
-    this.isPlaying = false;
+    reader.onload = function(event) {
+        audio.src = event.target.result;
+        document.getElementById("track-name").innerHTML = file.name;
+    };
 
-    this.initializeElements();
-    this.setupEventListeners();
-  }
+    reader.readAsDataURL(file);
+});
 
-  private initializeElements(): void {
-    this.playlistElement = document.getElementById("playlist")!;
-    this.fileInput = document.getElementById("file-input") as HTMLInputElement;
-    this.seekBar = document.getElementById("seek-bar")!;
-    this.seekBarFill = document.querySelector(".seek-bar-fill")!;
-    this.currentTimeElement = document.querySelector(".current-time")!;
-    this.durationElement = document.querySelector(".duration")!;
-    this.playPauseBtn = document.querySelector(".play-pause")!;
-    this.prevBtn = document.querySelector(".prev")!;
-    this.nextBtn = document.querySelector(".next")!;
-    this.trackName = document.querySelector(".track-name")!;
-  }
-
-  private setupEventListeners(): void {
-    this.fileInput.addEventListener("change", (e) => this.handleFileSelect(e));
-    this.playPauseBtn.addEventListener("click", () => this.togglePlayPause());
-    this.prevBtn.addEventListener("click", () => this.playPrevious());
-    this.nextBtn.addEventListener("click", () => this.playNext());
-    this.seekBar.addEventListener("click", (e) => this.handleSeek(e));
-
-    this.audio.addEventListener("timeupdate", () => this.updateProgress());
-    this.audio.addEventListener("ended", () => this.playNext());
-  }
-
-  private handleFileSelect(event: Event): void {
-    const files = Array.from((event.target as HTMLInputElement).files!);
-    files.forEach((file) => {
-      const song = {
-        file: file,
-        name: file.name,
-        url: URL.createObjectURL(file)
-      };
-      this.playlist.push(song);
-    });
-    this.updatePlaylist();
-    if (this.playlist.length === files.length) {
-      this.loadSong(0);
-    }
-  }
-
-  private updatePlaylist(): void {
-    this.playlistElement.innerHTML = "";
-    this.playlist.forEach((song, index) => {
-      const songElement = document.createElement("div");
-      songElement.className = `song-item ${index === this.currentIndex ? "active" : ""}`;
-      songElement.innerHTML = `
-                <span class="song-title">${song.name}</span>
-            `;
-      songElement.addEventListener("click", () => this.loadSong(index));
-      this.playlistElement.appendChild(songElement);
-    });
-  }
-
-  private loadSong(index: number): void {
-    if (index < 0 || index >= this.playlist.length) return;
-
-    this.currentIndex = index;
-    this.audio.src = this.playlist[index].url;
-    this.updatePlaylist();
-    this.trackName.textContent = this.playlist[index].name;
-
-    if (this.isPlaying) {
-      this.audio.play();
-      this.playPauseBtn.textContent = "⏸";
-    }
-  }
-
-  private togglePlayPause(): void {
-    if (!this.playlist.length) return;
-
-    if (this.isPlaying) {
-      this.audio.pause();
-      this.playPauseBtn.textContent = "▶";
+function playPauseMusic() {
+    if (!isPlaying) {
+        audio.play();
+        isPlaying = true;
+        document.getElementById("play-pause-button").innerHTML = "Pause";
     } else {
-      this.audio.play();
-      this.playPauseBtn.textContent = "⏸";
+        audio.pause();
+        isPlaying = false;
+        document.getElementById("play-pause-button").innerHTML = "Play";
     }
-    this.isPlaying = !this.isPlaying;
-  }
+}
 
-  private playPrevious(): void {
-    const newIndex = this.currentIndex - 1;
-    if (newIndex >= 0) {
-      this.loadSong(newIndex);
-      if (this
+function stopMusic() {
+    audio.pause();
+    audio.currentTime = 0;
+    isPlaying = false;
+    document.getElementById("play-pause-button").innerHTML = "Play";
+}
+
+function adjustVolume(volume) {
+    audio.volume = volume;
+    document.querySelector("label[for='volume-slider']").innerHTML = `Volume: ${Math.round(volume * 100)}%`;
+}
+
+function updateProgress(progress) {
+    audio.currentTime = (progress / 100) * audio.duration;
+    document.querySelector("label[for='progress-slider']").innerHTML = `Progress: ${progress}%`;
+}
+
+audio.addEventListener("timeupdate", function() {
+    let progress = (audio.currentTime / audio.duration) * 100;
+    document.getElementById("progress-slider").value = progress;
+    document.querySelector("label[for='progress-slider']").innerHTML = `Progress: ${Math.round(progress)}%`;
+    document.getElementById("track-duration").innerHTML = formatTime(audio.currentTime);
+});
+
+function formatTime(time) {
+    let minutes = Math.floor(time / 60);
+    let seconds = Math.floor(time % 60);
+    return `${padZero(minutes)}:${padZero(seconds)}`;
+}
+
+function padZero(number) {
+    return (number < 10 ? "0" : "") + number;
+}
