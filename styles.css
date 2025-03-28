@@ -4,17 +4,43 @@ body {
     color: white;
     font-family: Arial, sans-serif;
     text-align: center;
-    padding: 20px;
+    margin: 0;
+    padding: 0;
 }
-.container {
-    max-width: 600px;
-    margin: auto;
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    background: #111;
+    padding: 10px;
 }
-button {
-    background-color: green;
+
+.tabs button {
+    background: none;
     color: white;
     border: none;
-    padding: 10px;
-    margin: 5px;
+    padding: 10px 20px;
     cursor: pointer;
+    font-size: 16px;
+}
+
+.tabs button:hover {
+    background: #222;
+}
+
+.tab-content {
+    display: none;
+    padding: 20px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.player {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #222;
+    padding: 10px;
 }
