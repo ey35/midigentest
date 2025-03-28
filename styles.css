@@ -195,4 +195,12 @@ nav .nav-item:hover {
     height: 5px;
     background-color: #bbb;
     margin-top: 10px;
-    border-radius: 2
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+#progress-bar-range {
+    width: 100%;
+    background-color: #bbb;
+    border: none;
+}
