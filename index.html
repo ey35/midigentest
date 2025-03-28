@@ -1,41 +1,35 @@
-<div class="music-player">
-  <div class="now-playing">
-    <div class="album-art">♪</div>
-    <div class="track-info">
-      <div class="track-name">Select a track</div>
-      <div class="artist-name">Your Playlist</div>
-    </div>
-  </div>
-
-  <div class="controls">
-    <div class="seek-container">
-      <div class="seek-bar" id="seek-bar">
-        <div class="seek-bar-fill"></div>
-      </div>
-      <div class="time-info">
-        <span class="current-time">0:00</span>
-        <span class="duration">0:00</span>
-      </div>
-    </div>
-
-    <div class="control-buttons">
-      <button class="prev">⏮</button>
-      <button class="play-pause">▶</button>
-      <button class="next">⏭</button>
-    </div>
-  </div>
-
-  <div class="playlist-section">
-    <div class="playlist-header">
-      <h2>Playlist</h2>
-      <input type="file" id="file-input" accept="audio/*" multiple>
-      <button class="add-music-btn" onclick="document.getElementById('file-input').click()">
-        Add Music
-      </button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="music-player">
+        <div class="player-container">
+            <div class="track-info">
+                <p id="track-name">No song selected</p>
+                <p id="track-duration">00:00</p>
+            </div>
+            <div class="controls">
+                <button id="play-pause-button" onclick="playPauseMusic()">Play</button>
+                <button id="stop-button" onclick="stopMusic()">Stop</button>
+                <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.5" onchange="adjustVolume(this.value)">
+                <label for="volume-slider">Volume: 50%</label>
+            </div>
+            <div class="progress-bar">
+                <input type="range" id="progress-slider" min="0" max="100" value="0" onchange="updateProgress(this.value)">
+                <label for="progress-slider">Progress: 0%</label>
+            </div>
+            <div class="file-upload">
+                <input type="file" id="file-input" accept=".mp3, .wav">
+                <label for="file-input">Select a song</label>
+            </div>
+        </div>
     </div>
 
-    <div class="playlist" id="playlist">
-      <!-- Songs will be added here dynamically -->
-    </div>
-  </div>
-</div>
+    <script src="script.js"></script>
+</body>
+</html>
