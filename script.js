@@ -1,171 +1,154 @@
-let currentSongIndex = 0;
-let currentPlaylist = "Default";
-let songs = {
-    "Default": []
-};
+class MusicPlayer {
+  private audio: HTMLAudioElement;
+  private playlist: { file: File; name: string; url: string }[];
+  private currentIndex: number;
+  private isPlaying: boolean;
 
-const audio = new Audio();
-const playPauseBtn = document.getElementById('play-pause-btn');
-const prevBtn = document.getElementById('prev-btn');
-const nextBtn = document.getElementById('next-btn');
-const currentSongTitle = document.getElementById('current-song-title');
-const currentSongArtist = document.getElementById('current-song-artist');
-const currentSongImage = document.getElementById('current-song-image');
-const progressBar = document.getElementById('progress-bar-range');
-const playlistList = document.getElementById('playlist-list');
-const songsContainer = document.getElementById('songs-container');
+  private playlistElement: HTMLElement;
+  private fileInput: HTMLInputElement;
+  private seekBar: HTMLElement;
+  private seekBarFill: HTMLElement;
+  private currentTimeElement: HTMLElement;
+  private durationElement: HTMLElement;
+  private playPauseBtn: HTMLElement;
+  private prevBtn: HTMLElement;
+  private nextBtn: HTMLElement;
+  private trackName: HTMLElement;
 
-const addSongForm = document.getElementById('add-song-form');
-const songFileInput = document.getElementById('song-file');
-const songTitleInput = document.getElementById('song-title');
-const songArtistInput = document.getElementById('song-artist');
+  constructor() {
+    this.audio = new Audio();
+    this.playlist = [];
+    this.currentIndex = 0;
+    this.isPlaying = false;
 
-const homeBtn = document.getElementById('home-btn');
-const searchBtn = document.getElementById('search-btn');
-const libraryBtn = document.getElementById('library-btn');
-const createPlaylistBtn = document.getElementById('create-playlist-btn');
-const mainContent = document.getElementById('main-content');
+    this.initializeElements();
+    this.setupEventListeners();
+  }
 
-// Render Songs for a playlist
-function renderSongs() {
-    songsContainer.innerHTML = '';
-    if (!songs[currentPlaylist]) return;
+  private initializeElements(): void {
+    this.playlistElement = document.getElementById("playlist")!;
+    this.fileInput = document.getElementById("file-input") as HTMLInputElement;
+    this.seekBar = document.getElementById("seek-bar")!;
+    this.seekBarFill = document.querySelector(".seek-bar-fill")!;
+    this.currentTimeElement = document.querySelector(".current-time")!;
+    this.durationElement = document.querySelector(".duration")!;
+    this.playPauseBtn = document.querySelector(".play-pause")!;
+    this.prevBtn = document.querySelector(".prev")!;
+    this.nextBtn = document.querySelector(".next")!;
+    this.trackName = document.querySelector(".track-name")!;
+  }
 
-    songs[currentPlaylist].forEach((song, index) => {
-        const songItem = document.createElement('div');
-        songItem.classList.add('song-item');
-        songItem.innerHTML = `
-            <img src="${song.albumArt}" alt="Album Art">
-            <div class="song-info">
-                <div class="song-title">${song.title}</div>
-                <div class="song-artist">${song.artist}</div>
-            </div>
-        `;
-        songItem.addEventListener('click', () => playSong(index));
-        songsContainer.appendChild(songItem);
+  private setupEventListeners(): void {
+    this.fileInput.addEventListener("change", (e) => this.handleFileSelect(e));
+    this.playPauseBtn.addEventListener("click", () => this.togglePlayPause());
+    this.prevBtn.addEventListener("click", () => this.playPrevious());
+    this.nextBtn.addEventListener("click", () => this.playNext());
+    this.seekBar.addEventListener("click", (e) => this.handleSeek(e));
+
+    this.audio.addEventListener("timeupdate", () => this.updateProgress());
+    this.audio.addEventListener("ended", () => this.playNext());
+  }
+
+  private handleFileSelect(event: Event): void {
+    const files = Array.from((event.target as HTMLInputElement).files!);
+    files.forEach((file) => {
+      const song = {
+        file: file,
+        name: file.name,
+        url: URL.createObjectURL(file)
+      };
+      this.playlist.push(song);
     });
-}
-
-// Add Song to the current playlist
-function addSong(file, title, artist) {
-    const song = {
-        title,
-        artist,
-        file: URL.createObjectURL(file),
-        albumArt: 'https://via.placeholder.com/60',
-    };
-    if (!songs[currentPlaylist]) {
-        songs[currentPlaylist] = [];
+    this.updatePlaylist();
+    if (this.playlist.length === files.length) {
+      this.loadSong(0);
     }
-    songs[currentPlaylist].push(song);
-    renderSongs();
-}
+  }
 
-// Handle Audio Playback
-function playSong(index) {
-    currentSongIndex = index;
-    const song = songs[currentPlaylist][currentSongIndex];
-    audio.src = song.file;
-    audio.play();
-    currentSongTitle.textContent = song.title;
-    currentSongArtist.textContent = song.artist;
-    currentSongImage.src = song.albumArt;
-    playPauseBtn.textContent = 'Pause';
-}
-
-// Add Event Listeners
-audio.addEventListener('timeupdate', () => {
-    const progress = (audio.currentTime / audio.duration) * 100;
-    progressBar.value = progress;
-});
-
-addSongForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const file = songFileInput.files[0];
-    const title = songTitleInput.value;
-    const artist = songArtistInput.value;
-    addSong(file, title, artist);
-    addSongForm.reset();
-});
-
-// Play/Pause Button
-playPauseBtn.addEventListener('click', () => {
-    if (audio.paused) {
-        audio.play();
-        playPauseBtn.textContent = 'Pause';
-    } else {
-        audio.pause();
-        playPauseBtn.textContent = 'Play';
-    }
-});
-
-// Previous and Next Buttons
-prevBtn.addEventListener('click', () => {
-    if (currentSongIndex > 0) {
-        playSong(currentSongIndex - 1);
-    }
-});
-
-nextBtn.addEventListener('click', () => {
-    if (currentSongIndex < songs[currentPlaylist].length - 1) {
-        playSong(currentSongIndex + 1);
-    }
-});
-
-// Create Playlist Button
-createPlaylistBtn.addEventListener('click', () => {
-    const playlistName = prompt("Enter playlist name:");
-    if (playlistName && !songs[playlistName]) {
-        songs[playlistName] = [];
-        const playlistItem = document.createElement('li');
-        playlistItem.textContent = playlistName;
-        playlistItem.addEventListener('click', () => {
-            currentPlaylist = playlistName;
-            renderSongs();
-        });
-        playlistList.appendChild(playlistItem);
-    }
-});
-
-// Tab Navigation
-homeBtn.addEventListener('click', () => {
-    mainContent.innerHTML = `
-        <h1>Your Playlist</h1>
-        <div class="songs-container" id="songs-container"></div>
-        <form id="add-song-form">
-            <input type="file" id="song-file" accept="audio/*" required>
-            <input type="text" id="song-title" placeholder="Song Title" required>
-            <input type="text" id="song-artist" placeholder="Artist" required>
-            <button type="submit">Add Song</button>
-        </form>
-    `;
-    renderSongs();
-});
-
-searchBtn.addEventListener('click', () => {
-    mainContent.innerHTML = `<h1>Search Songs</h1>`;
-});
-
-libraryBtn.addEventListener('click', () => {
-    mainContent.innerHTML = `<h1>Your Library</h1>`;
-    // Render all songs from all playlists in the library view
-    const libraryContainer = document.createElement('div');
-    Object.keys(songs).forEach(playlist => {
-        const playlistSection = document.createElement('div');
-        playlistSection.innerHTML = `<h2>${playlist}</h2>`;
-        songs[playlist].forEach((song, index) => {
-            const songItem = document.createElement('div');
-            songItem.innerHTML = `
-                <img src="${song.albumArt}" alt="Album Art">
-                <div class="song-info">
-                    <div class="song-title">${song.title}</div>
-                    <div class="song-artist">${song.artist}</div>
-                </div>
+  private updatePlaylist(): void {
+    this.playlistElement.innerHTML = "";
+    this.playlist.forEach((song, index) => {
+      const songElement = document.createElement("div");
+      songElement.className = `song-item ${index === this.currentIndex ? "active" : ""}`;
+      songElement.innerHTML = `
+                <span class="song-title">${song.name}</span>
             `;
-            songItem.addEventListener('click', () => playSong(index));
-            playlistSection.appendChild(songItem);
-        });
-        libraryContainer.appendChild(playlistSection);
+      songElement.addEventListener("click", () => this.loadSong(index));
+      this.playlistElement.appendChild(songElement);
     });
-    mainContent.appendChild(libraryContainer);
-});
+  }
+
+  private loadSong(index: number): void {
+    if (index < 0 || index >= this.playlist.length) return;
+
+    this.currentIndex = index;
+    this.audio.src = this.playlist[index].url;
+    this.updatePlaylist();
+    this.trackName.textContent = this.playlist[index].name;
+
+    if (this.isPlaying) {
+      this.audio.play();
+      this.playPauseBtn.textContent = "⏸";
+    }
+  }
+
+  private togglePlayPause(): void {
+    if (!this.playlist.length) return;
+
+    if (this.isPlaying) {
+      this.audio.pause();
+      this.playPauseBtn.textContent = "▶";
+    } else {
+      this.audio.play();
+      this.playPauseBtn.textContent = "⏸";
+    }
+    this.isPlaying = !this.isPlaying;
+  }
+
+  private playPrevious(): void {
+    const newIndex = this.currentIndex - 1;
+    if (newIndex >= 0) {
+      this.loadSong(newIndex);
+      if (this.isPlaying) this.audio.play();
+    }
+  }
+
+  private playNext(): void {
+    const newIndex = this.currentIndex + 1;
+    if (newIndex < this.playlist.length) {
+      this.loadSong(newIndex);
+      if (this.isPlaying) this.audio.play();
+    }
+  }
+
+  private handleSeek(event: MouseEvent): void {
+    const rect = this.seekBar.getBoundingClientRect();
+    const clickPosition = event.clientX - rect.left;
+    const seekPercentage = clickPosition / rect.width;
+    const seekTime = seekPercentage * this.audio.duration;
+
+    this.audio.currentTime = seekTime;
+  }
+
+  private updateProgress(): void {
+    const currentTime = this.audio.currentTime;
+    const duration = this.audio.duration;
+
+    if (duration) {
+      const progressPercent = (currentTime / duration) * 100;
+      this.seekBarFill.style.width = `${progressPercent}%`;
+
+      this.currentTimeElement.textContent = this.formatTime(currentTime);
+      this.durationElement.textContent = this.formatTime(duration);
+    }
+  }
+
+  private formatTime(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+  }
+}
+
+// Initialize the music player
+const player = new MusicPlayer();
