@@ -109,46 +109,4 @@ class MusicPlayer {
     const newIndex = this.currentIndex - 1;
     if (newIndex >= 0) {
       this.loadSong(newIndex);
-      if (this.isPlaying) this.audio.play();
-    }
-  }
-
-  private playNext(): void {
-    const newIndex = this.currentIndex + 1;
-    if (newIndex < this.playlist.length) {
-      this.loadSong(newIndex);
-      if (this.isPlaying) this.audio.play();
-    }
-  }
-
-  private handleSeek(event: MouseEvent): void {
-    const rect = this.seekBar.getBoundingClientRect();
-    const clickPosition = event.clientX - rect.left;
-    const seekPercentage = clickPosition / rect.width;
-    const seekTime = seekPercentage * this.audio.duration;
-
-    this.audio.currentTime = seekTime;
-  }
-
-  private updateProgress(): void {
-    const currentTime = this.audio.currentTime;
-    const duration = this.audio.duration;
-
-    if (duration) {
-      const progressPercent = (currentTime / duration) * 100;
-      this.seekBarFill.style.width = `${progressPercent}%`;
-
-      this.currentTimeElement.textContent = this.formatTime(currentTime);
-      this.durationElement.textContent = this.formatTime(duration);
-    }
-  }
-
-  private formatTime(seconds: number): string {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = Math.floor(seconds % 60);
-    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-  }
-}
-
-// Initialize the music player
-const player = new MusicPlayer();
+      if (this
