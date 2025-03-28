@@ -1,210 +1,81 @@
-$primary-color: #7f5af0;
-$accent-color: #2cb67d;
-$bg-color: #16161a;
-$surface-color: #242629;
-$text-primary: #fffffe;
-$text-secondary: #94a1b2;
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
 body {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: $bg-color;
-  padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
 }
 
 .music-player {
-  width: 380px;
-  background: $surface-color;
-  border-radius: 24px;
-  padding: 32px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
-  .now-playing {
-    margin-bottom: 32px;
-    text-align: center;
+.player-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-    .album-art {
-      width: 200px;
-      height: 200px;
-      margin: 0 auto 20px;
-      border-radius: 16px;
-      background: linear-gradient(45deg, $primary-color, $accent-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: $text-primary;
-      font-size: 40px;
-    }
+.track-info {
+    margin-bottom: 20px;
+}
 
-    .track-info {
-      .track-name {
-        color: $text-primary;
-        font-size: 20px;
-        font-weight: 600;
-        margin-bottom: 8px;
-      }
-
-      .artist-name {
-        color: $text-secondary;
-        font-size: 16px;
-      }
-    }
-  }
+.track-info p {
+    margin-bottom: 10px;
 }
 
 .controls {
-  .seek-container {
-    margin-bottom: 24px;
-
-    .seek-bar {
-      width: 100%;
-      height: 6px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 3px;
-      margin: 10px 0;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-
-      .seek-bar-fill {
-        position: absolute;
-        height: 100%;
-        background: $primary-color;
-        border-radius: 3px;
-        width: 0;
-        transition: width 0.1s linear;
-      }
-    }
-
-    .time-info {
-      display: flex;
-      justify-content: space-between;
-      color: $text-secondary;
-      font-size: 14px;
-    }
-  }
-
-  .control-buttons {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 24px;
-    margin-bottom: 32px;
-
-    button {
-      background: none;
-      border: none;
-      color: $text-primary;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-      padding: 8px;
-
-      &:hover {
-        transform: scale(1.1);
-      }
-
-      &.play-pause {
-        width: 56px;
-        height: 56px;
-        background: $primary-color;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-
-        &:hover {
-          background: darken($primary-color, 5%);
-        }
-      }
-    }
-  }
+    margin-bottom: 20px;
 }
 
-.playlist-section {
-  .playlist-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-
-    h2 {
-      color: $text-primary;
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    .add-music-btn {
-      background: $accent-color;
-      color: $text-primary;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 14px;
-      cursor: pointer;
-      transition: background 0.2s ease;
-
-      &:hover {
-        background: darken($accent-color, 5%);
-      }
-    }
-  }
-
-  .playlist {
-    max-height: 300px;
-    overflow-y: auto;
-    padding-right: 8px;
-
-    &::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 2px;
-    }
-
-    .song-item {
-      display: flex;
-      align-items: center;
-      padding: 12px 16px;
-      margin: 4px 0;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background: rgba(255, 255, 255, 0.1);
-      }
-
-      &.active {
-        background: rgba($primary-color, 0.2);
-        border-left: 4px solid $primary-color;
-      }
-
-      .song-title {
-        color: $text-primary;
-        font-size: 14px;
-        margin-left: 12px;
-        flex: 1;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
-  }
+button {
+    width: 100px;
+    height: 30px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: #fff;
+    cursor: pointer;
 }
 
-#file-input {
-  display: none;
+button:hover {
+    background-color: #3e8e41;
+}
+
+.progress-bar {
+    margin-bottom: 20px;
+}
+
+input[type="range"] {
+    width: 100%;
+}
+
+label {
+    margin-left: 10px;
+}
+
+.file-upload {
+    margin-bottom: 20px;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+label[for="file-input"] {
+    width: 100px;
+    height: 30px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: #fff;
+    cursor: pointer;
+}
+
+label[for="file-input"]:hover {
+    background-color: #3e8e41;
 }
