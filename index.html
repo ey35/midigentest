@@ -3,53 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Clone</title>
+    <title>Music Player</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Spotify_icon.svg/1024px-Spotify_icon.svg.png" type="image/png">
 </head>
 <body>
     <div class="container">
         <!-- Sidebar -->
         <div class="sidebar">
-            <div class="logo">
-                <i class="fab fa-spotify"></i> Spotify
-            </div>
+            <h2 class="logo">Music Player</h2>
             <nav>
                 <div class="nav-item" id="home-btn">
-                    <i class="fas fa-home"></i>
                     <span>Home</span>
                 </div>
                 <div class="nav-item" id="search-btn">
-                    <i class="fas fa-search"></i>
                     <span>Search</span>
                 </div>
                 <div class="nav-item" id="library-btn">
-                    <i class="fas fa-book"></i>
                     <span>Your Library</span>
                 </div>
             </nav>
             <div class="playlist">
-                <div class="playlist-item">Playlist 1</div>
-                <div class="playlist-item">Playlist 2</div>
-                <div class="playlist-item">Playlist 3</div>
+                <h3>Playlists</h3>
+                <ul id="playlist-list">
+                    <!-- Playlist will be dynamically added -->
+                </ul>
             </div>
         </div>
-        
+
         <!-- Main Content -->
         <div class="main-content">
-            <div class="header">
-                <div class="search-bar">
-                    <input type="text" placeholder="Search for Artists, Songs, or Podcasts">
-                </div>
-                <div class="user-profile">
-                    <img src="https://i.pravatar.cc/100" alt="User Avatar">
-                    <span>Jonny Bravo</span>
-                </div>
-            </div>
-            <h2>Your Playlist</h2>
-            <ul class="songs-list" id="songs-list">
+            <h1>Your Playlist</h1>
+            <div class="songs-container" id="songs-container">
                 <!-- Songs will be dynamically added here -->
-            </ul>
+            </div>
+
             <form id="add-song-form">
                 <input type="file" id="song-file" accept="audio/*" required>
                 <input type="text" id="song-title" placeholder="Song Title" required>
@@ -57,34 +44,31 @@
                 <button type="submit">Add Song</button>
             </form>
         </div>
+
     </div>
 
     <!-- Playback Bar -->
     <div class="playback-bar">
         <div class="playback-info">
-            <img src="https://via.placeholder.com/60" alt="Album Cover" id="current-song-image">
+            <img src="https://via.placeholder.com/60" alt="Album Art" id="current-song-image">
             <div>
                 <div class="song-title" id="current-song-title">Song Title</div>
                 <div class="song-artist" id="current-song-artist">Artist</div>
             </div>
         </div>
+
         <div class="playback-controls">
             <div class="control-buttons">
-                <i class="fas fa-step-backward" id="prev-btn"></i>
-                <i class="fas fa-play-circle" id="play-pause-btn"></i>
-                <i class="fas fa-step-forward" id="next-btn"></i>
+                <button id="prev-btn">Prev</button>
+                <button id="play-pause-btn">Play</button>
+                <button id="next-btn">Next</button>
             </div>
             <div class="progress-bar">
-                <div class="progress"></div>
+                <div class="progress" id="progress"></div>
             </div>
-        </div>
-        <div class="volume-control">
-            <i class="fas fa-volume-up"></i>
-            <input type="range" class="volume-slider" min="0" max="100" value="50">
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
