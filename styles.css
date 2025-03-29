@@ -1,81 +1,105 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+
+* {
+    box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: "Montserrat", sans-serif;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    min-height: 100vh;
+    margin: 0;
+    transition: background 0.2s linear;
+}
+
+body.dark {
+    background-color: #292c35;
+}
+
+body.dark h1 {
+    color: #fff;
+}
+
+.tabs {
+    margin: 20px 0;
+}
+
+.tab {
+    border: 2px solid #24b4fb;
+    background-color: #24b4fb;
+    border-radius: 0.9em;
+    cursor: pointer;
+    padding: 0.8em 1.2em;
+    transition: all ease-in-out 0.2s;
+    font-size: 16px;
+    color: #fff;
+}
+
+.tab:hover {
+    background-color: #0071e2;
+}
+
+#playlist {
+    margin-top: 20px;
+}
+
+.track {
+    cursor: pointer;
+    padding: 5px;
+    border: 1px solid #ccc;
+    margin: 5px 0;
+}
+
+.track:hover {
     background-color: #f0f0f0;
 }
 
-.music-player {
-    width: 500px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.dark-mode {
+    margin: 20px 0;
 }
 
-.player-container {
+.checkbox {
+    opacity: 0;
+    position: absolute;
+}
+
+.checkbox-label {
+    background-color: #111;
+    width: 50px;
+    height: 26px;
+    border-radius: 50px;
+    position: relative;
+    padding: 5px;
+    cursor: pointer;
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
 }
 
-.track-info {
-    margin-bottom: 20px;
+.fa-moon {
+    color: #f1c40f;
 }
 
-.track-info p {
-    margin-bottom: 10px;
+.fa-sun {
+    color: #f39c12;
 }
 
-.controls {
-    margin-bottom: 20px;
+.checkbox-label .ball {
+    background-color: #fff;
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    border-radius: 50%;
+    transition: transform 0.2s linear;
 }
 
-button {
-    width: 100px;
-    height: 30px;
-    margin: 0 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #4CAF50;
-    color: #fff;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #3e8e41;
-}
-
-.progress-bar {
-    margin-bottom: 20px;
-}
-
-input[type="range"] {
-    width: 100%;
-}
-
-label {
-    margin-left: 10px;
-}
-
-.file-upload {
-    margin-bottom: 20px;
-}
-
-input[type="file"] {
-    display: none;
-}
-
-label[for="file-input"] {
-    width: 100px;
-    height: 30px;
-    border: none;
-    border-radius: 5px;
-    background-color: #4CAF50;
-    color: #fff;
-    cursor: pointer;
-}
-
-label[for="file-input"]:hover {
-    background-color: #3e8e41;
+.checkbox:checked + .checkbox-label .ball {
+    transform: translateX(24px);
 }
