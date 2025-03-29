@@ -25,11 +25,18 @@
         </label>
     </div>
 
-    <input type="file" id="fileInput" accept="audio/mp3" multiple>
-    <button id="addButton"><span>Add to Playlist</span></button>
+    <div id="playlistSection" class="section">
+        <input type="file" id="fileInput" accept="audio/mp3" multiple>
+        <button id="addButton"><span>Add to Playlist</span></button>
+        <button id="newPlaylistButton"><span>+ New Playlist</span></button>
+        <h2>Playlist</h2>
+        <div id="playlist"></div>
+    </div>
 
-    <h2>Playlist</h2>
-    <div id="playlist"></div>
+    <div id="librarySection" class="section" style="display: none;">
+        <h2>Library</h2>
+        <p>Your library will be displayed here.</p>
+    </div>
 
     <audio id="audioPlayer" controls></audio>
 
