@@ -38,10 +38,15 @@ body.dark h1 {
     transition: all ease-in-out 0.2s;
     font-size: 16px;
     color: #fff;
+    margin: 0 5px;
 }
 
 .tab:hover {
     background-color: #0071e2;
+}
+
+.section {
+    margin-top: 20px;
 }
 
 #playlist {
