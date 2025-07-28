@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Chord MIDI Generator</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <h1>Chord MIDI Generator</h1>
+  <p>Enter chords (e.g. <code>Abmaj7, Bbm9, Eb7, Abmaj7</code>):</p>
+  <textarea id="chordInput" rows="4" placeholder="Enter chords separated by commas">Abmaj7, Bbm9, Eb7, Abmaj7</textarea>
+  <button id="playBtn">Play Chords</button>
+  <button id="downloadBtn">Download MIDI</button>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.39/Tone.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/midiwriter-js@2.1.1/dist/MidiWriter.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
