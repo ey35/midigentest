@@ -1,96 +1,104 @@
-const fileInput = document.getElementById('fileInput');
-const addButton = document.getElementById('addButton');
-const newPlaylistButton = document.getElementById('newPlaylistButton');
-const playlist = document.getElementById('playlist');
-const audioPlayer = document.getElementById('audioPlayer');
-const playPauseButton = document.getElementById('playPauseButton');
-const nextTrackButton = document.getElementById('nextTrackButton');
-const prevTrackButton = document.getElementById('prevTrackButton');
+const CHORD_FORMULAS = {
+  'maj7': [0, 4, 7, 11],
+  'm7': [0, 3, 7, 10],
+  'min7': [0, 3, 7, 10],
+  '9': [0, 4, 7, 10, 14],
+  'm9': [0, 3, 7, 10, 14],
+  '7': [0, 4, 7, 10],
+  'dim7': [0, 3, 6, 9],
+  'sus2': [0, 2, 7],
+  'sus4': [0, 5, 7],
+  '': [0, 4, 7], // major triad
+  'm': [0, 3, 7], // minor triad
+};
 
-let tracks = [];
-let currentTrackIndex = 0;
-let isPlaying = false;
+const NOTES = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'];
 
-addButton.addEventListener('click', () => {
-    const files = fileInput.files;
-    for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        if (file.type === 'audio/mp3') {
-            const trackURL = URL.createObjectURL(file);
-            tracks.push({ name: file.name, url: trackURL });
-            updatePlaylist();
-        }
+function parseChordName(chordStr) {
+  for (let i = 3; i >= 0; i--) {
+    const root = chordStr.substring(0, i);
+    const type = chordStr.substring(i);
+    if (NOTES.includes(root) && CHORD_FORMULAS.hasOwnProperty(type)) {
+      return { root, type };
     }
-    fileInput.value = ''; // Clear the input
-});
-
-function updatePlaylist() {
-    playlist.innerHTML = '';
-    tracks.forEach((track, index) => {
-        const trackElement = document.createElement('div');
-        trackElement.className = 'track';
-        trackElement.textContent = track.name;
-        trackElement.addEventListener('click', () => {
-            currentTrackIndex = index;
-            playTrack();
-        });
-        playlist.appendChild(trackElement);
-    });
+  }
+  return null;
 }
 
-function playTrack() {
-    if (tracks.length > 0) {
-        audioPlayer.src = tracks[currentTrackIndex].url;
-        audioPlayer.play();
-        isPlaying = true;
-        playPauseButton.innerHTML = '<i class="fa fa-pause" aria-hidden="true"></i>';
-        updateTrackDetails();
-    }
+function getChordNotes(root, type, octave = 4) {
+  const rootIndex = NOTES.indexOf(root);
+  const semitones = CHORD_FORMULAS[type];
+  return semitones.map(semi => NOTES[(rootIndex + semi) % 12] + octave);
 }
 
-function updateTrackDetails() {
-    const currentTrack = tracks[currentTrackIndex];
-    const trackElement = document.querySelector('.track');
-    const artistElement = document.querySelector('.artist');
-    trackElement.textContent = currentTrack.name;
-    artistElement.textContent = "Artist Name"; // Placeholder for artist name
+function toMidiNumber(noteName) {
+  // Convert flats to sharps
+  const replacements = { 'Bb':'A#', 'Eb':'D#', 'Ab':'G#', 'Db':'C#', 'Gb':'F#' };
+  let name = noteName;
+  for (const [flat, sharp] of Object.entries(replacements)) {
+    if (name.startsWith(flat)) {
+      name = sharp + name.slice(flat.length);
+      break;
+    }
+  }
+  const octave = parseInt(name.slice(-1));
+  const pitch = name.slice(0, -1);
+  const noteIdx = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'].indexOf(pitch);
+  return 12 * (octave + 1) + noteIdx;
 }
 
-playPauseButton.addEventListener('click', () => {
-    if (isPlaying) {
-        audioPlayer.pause();
-        playPauseButton.innerHTML = '<i class="fa fa-play" aria-hidden="true"></i>';
-    } else {
-        audioPlayer.play();
-        playPauseButton.innerHTML = '<i class="fa fa-pause" aria-hidden="true"></i>';
-    }
-    isPlaying = !isPlaying;
-});
+function parseChordInput(text) {
+  return text.split(',').map(s => s.trim()).map(parseChordName).filter(Boolean);
+}
 
-nextTrackButton.addEventListener('click', () => {
-    currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
-    playTrack();
-});
+async function playChords() {
+  await Tone.start();
+  const chords = parseChordInput(document.getElementById('chordInput').value);
+  if (!chords.length) {
+    alert('No valid chords found!');
+    return;
+  }
+  const synth = new Tone.PolySynth(Tone.Synth).toDestination();
+  let time = 0;
+  chords.forEach(chord => {
+    const notes = getChordNotes(chord.root, chord.type);
+    synth.triggerAttackRelease(notes, '2n', `+${time}`);
+    time += 1.5;
+  });
+}
 
-prevTrackButton.addEventListener('click', () => {
-    currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
-    playTrack();
-});
+function downloadMIDI() {
+  const chords = parseChordInput(document.getElementById('chordInput').value);
+  if (!chords.length) {
+    alert('No valid chords found!');
+    return;
+  }
 
-newPlaylistButton.addEventListener('click', () => {
-    const playlistName = prompt("Enter playlist name:");
-    if (playlistName) {
-        const newPlaylist = document.createElement('div');
-        newPlaylist.className = 'track';
-        newPlaylist.textContent = playlistName;
-        newPlaylist.addEventListener('click', () => {
-            alert("Feature to view/edit this playlist will be implemented.");
-        });
-        playlist.appendChild(newPlaylist);
-    }
-});
+  const track = new MidiWriter.Track();
+  track.setTempo(90);
 
-const checkbox = document.getElementById("checkbox");
-checkbox.addEventListener("change", () => {
-    document.body.classList.toggle("dark");
-});
+  chords.forEach(chord => {
+    const notes = getChordNotes(chord.root, chord.type);
+    const midiNotes = notes.map(n => toMidiNumber(n));
+    track.addEvent(new MidiWriter.NoteEvent({
+      pitch: midiNotes,
+      duration: '2'
+    }));
+  });
+
+  const writer = new MidiWriter.Writer(track);
+  const uint8Array = writer.buildFile();
+
+  const blob = new Blob([uint8Array], { type: 'audio/midi' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'custom_chords.mid';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+document.getElementById('playBtn').addEventListener('click', playChords);
+document.getElementById('downloadBtn').addEventListener('click', downloadMIDI);
