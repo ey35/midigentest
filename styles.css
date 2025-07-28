@@ -1,207 +1,25 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat');
-
-* {
-  font-family: 'Montserrat';
-  color: #FFFFFF;
-}
-
-html, body {
-  width: 100%;
-  height: 100%;
-  margin: 0px;
-}
-
 body {
-  background: #505050;
+  font-family: sans-serif;
+  background: #1e1e1e;
+  color: white;
+  padding: 2rem;
+  max-width: 600px;
+  margin: auto;
 }
-
-.musApp {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  height: 530px;
-  width: 380px;
-  background: #505050;
+textarea, button {
+  width: 100%;
+  margin: 10px 0;
   padding: 10px;
-  border-radius: 2px;
-  box-shadow: 0px 5px 10px #505050;
-  overflow: hidden;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: none;
+  box-sizing: border-box;
 }
-
-.row {
-  display: inline-block;
-}
-
-.fa-chevron-down {
-  position: absolute;
-  left: 20px;
-  top: 20px;
-  color: #e7e7e7;
-}
-
-.fa-bars {
-  position: absolute;
-  right: 20px;
-  top: 20px;
-  color: #e7e7e7;
-}
-
-.musicFrom {
-  position: absolute;
-  left: 100px;
-  top: 5px;
-  font-size: 0.8em;
-  color: #e7e7e7;
-}
-
-.fromSongs {
-  position: absolute;
-  left: 180px;
-  top: 20px;
-  font-size: 0.9em;
-  color: #e7e7e7;
-}
-
-.fa {
+button {
+  background: #3a86ff;
+  color: white;
   cursor: pointer;
 }
-
-.fa:hover {
-  color: #B7B7B7;
-}
-
-.currentCover, .nextCover, .prevCover {
-  position: absolute;
-  background: rgb(50, 50, 50);
-  background-position: 50% 50%;
-  border-radius: 1px;
-  overflow: hidden;
-}
-
-.currentCover {
-  width: 300px;
-  height: 300px;
-  left: 50px;
-  top: 70px;
-  background-size:300px 300px;
-}
-
-.prevCover, .nextCover {
-  width: 250px;
-  height: 250px;
-  top: 95px;
-  filter: blur(2px);
-  background-size:250px 250px;
-}
-
-.prevCover {
-  left: -210px;
-}
-
-.nextCover {
-  right: -210px;
-}
-
-.status1 {
-  position: absolute;
-  top: 390px;
-  left: 40px;
-}
-
-.status2 {
-  position: absolute;
-  top: 392px;
-  right: 40px;
-}
-
-.details {
-  text-align: center;
-  margin-top: 370px;
-}
-
-.artist {
-  font-size: 0.8em;
-  margin-top: 4px;
-  color: #e7e7e7;
-}
-
-.dotContain {
-  position: absolute;
-  background: #FFF;
-  left: 29px;
-  top: 437px;
-  width: 340px;
-  height: 3px;
-  border-radius: 100%;
-}
-
-.timerDot {
-  background: #fff;
-  border: 1px solid #E7E7E7;
-  cursor: pointer;
-  width: 10px;
-  height: 10px;
-  border-radius: 100%;
-  margin-top: -4px;
-}
-
-.playPause {
-  border: 2px solid #fff;
-  border-radius: 100%;
-  width: 50px;
-  height: 50px;
-  position: absolute;
-  left: 170px;
-  top: 460px;
-  cursor: pointer;
-}
-
-.playPause:hover {
-  border: 2px solid #B7B7B7;
-  color: #B7B7B7;
-}
-
-.fa-play {
-  font-size: 2em;
-  margin-left: 16px;
-  margin-top: 9px;
-}
-
-.nextTrack, .prevTrack {
-  position: absolute;
-  font-size: 1.5em;
-  top: 474px;
-}
-
-.nextTrack {
-  right: 130px;
-}
-
-.prevTrack {
-  left: 122px;
-}
-
-.shuffle {
-  position: absolute;
-  top: 480px;
-  left: 40px;
-}
-
-.repeat {
-  position: absolute;
-  top: 480px;
-  right: 40px;
-}
-
-.devices {
-  position: absolute;
-  top: 526px;
-  left: 148px;
-  color: #C7C7C7;
-  font-size: 0.6em;
-}
-
-.hidden {
-  visibility: hidden;
+button:hover {
+  background: #265fcc;
 }
